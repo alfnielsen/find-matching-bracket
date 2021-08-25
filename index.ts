@@ -84,7 +84,7 @@ const isEnd = (code:string, p: number, parent: BracketSet) => {
  * @param throwErrors default false - if true: throw error with information
  * @returns 
  */
-export default function matchBracket(code: string, startPosition: number, throwErrors = false){
+export default function matchBracket(code: string, startPosition: number, throwErrors = false): number{
     debugger
     const stack: BracketSet[] = []
     let p = startPosition;
