@@ -19,17 +19,36 @@ Find matching bracket in Js/Ts/Cs code (including string Template literals inter
  */
 export default function matchBracket(code: string, startPosition: number, throwErrors = false):number
 ```
-**ex:**
+
+
+Code for matchin example (highlighted):
+```ts
+function foo(s: string) { // <- start pos 23
+   var str = `text with repeat ${new Array(2).fill(s).map(s=>{ return s + '-{}-' }).join('')} ends here `;
+    return { return: str }
+} // <- return this position 159 (What we need to find!)
+```
+
+
+**matchBracket example:**
 ```ts
 const code = 
-    "function foo(s:srting) {\n"+ // <- start pos 23
-    "   var str = `text with repeat ${new Array(2).fill(s).join("")} ends here `;\n"+
+    "function foo(s: string) {\n"+ // <- start pos 23
+    "   var str = `text with repeat ${new Array(2).fill(s).map(s=>{ return s + '-{}-' }).join('')} ends here `;\n"+
     "    return { return: str }\n"+
-    "}" // <- return this position
+    "}" // <- return this position 159 (What we need to find!)
+    
+const endPosition = matchBracket(code, 23);
+
+// endPosition = 159
+const includeBoth = code.substring(23, 160) // 159+1 to include the end bracket
+const excludeBoth = code.substring(24, 159) // 23+1 to exclude start bracket
+
 ```
 
 Bracket that can be matchs: 
-'${' and '$"' can only be match in matching string templates (js an cs templates)
+
+`${` and `$"` can only be matched inside string templates (js an cs templates)
 
 ```ts
 type StartBracket = '<'|'['|'('|'{'|'${'|'$"'|'"'|"'"|"`"
