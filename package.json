@@ -1,0 +1,27 @@
+{
+  "name": "find-matching-bracket",
+  "version": "1.0.1",
+  "description": "Find matching bracket in Js/Ts/Cs code (including string Template literals interpolation)",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alfnielsen/find-matching-bracket.git"
+  },
+  "keywords": [
+    "match",
+    "brackets",
+    "js",
+    "ts",
+    "cs"
+  ],
+  "author": "Alf Nielsen <alfnielsen@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alfnielsen/find-matching-bracket/issues"
+  },
+  "homepage": "https://github.com/alfnielsen/find-matching-bracket#readme"
+}
