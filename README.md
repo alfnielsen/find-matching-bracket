@@ -25,7 +25,7 @@ const code =
     "function foo(s:srting) {\n"+ // <- start pos 23
     "   var str = `text with repeat ${new Array(2).fill(s).join("")} ends here `;\n"+
     "    return { return: str }\n"+
-    "}" // <- return this
+    "}" // <- return this position
 ```
 
 Bracket that can be matchs: 
