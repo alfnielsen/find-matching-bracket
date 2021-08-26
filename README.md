@@ -48,16 +48,17 @@ Bracket that can be matchs:
 `${` and `$"` can only be matched inside string templates (js an cs templates)
 
 Matching bracket:
-
-- lineComment `// ` - `\n`
-- multilineComment `/* ` - `*/`
-- angle `< ` - `> `
-- peparentheses `( ` - `) `
-- square `[ ` - `] `
-- curly `{ ` - `} `
-- escapeJsTemaple `${ ` - `} `
-- inCSharpTemaple `{ ` - `} `
-- double `" ` - `"`
-- single `' ` - `'`
-- jsTemplate `&#96; ` - `&#96;`
-- cSharpTemplate `$" ` - `"`
+| name | start | end | node |
+|:-----|:-----:|:---:|:-----|
+| lineComment        | //  |  \n | |
+| multilineComment   | /*  |  */ | |
+| angle              | <   |  >  | |
+| peparentheses      | (   |  )  | |
+| square             | [   |  ]  | |
+| curly              | {   |  }  | |
+| double             | "   |  "  | |
+| single             | '   |  '  | |
+| jsTemplate         |  \` |  \` | |
+| cSharpTemplate     | $"  |  "  | |
+| escapeJsTemaple    | ${  |  }  | only in jsTemplate |
+| inCSharpTemaple    | {   |  }  | only in cSharpTemplate |
