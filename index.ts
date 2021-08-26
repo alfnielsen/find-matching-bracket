@@ -103,7 +103,6 @@ const isEnd = (code: string, p: number, parent: BracketSet) => {
  * @returns
  */
 export default function matchBracket(code: string, startPosition: number, throwErrors = false): number {
-  debugger;
   const stack: BracketSet[] = [];
   let p = startPosition;
   let char = code[p];

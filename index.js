@@ -96,7 +96,6 @@ var isEnd = function (code, p, parent) {
  */
 function matchBracket(code, startPosition, throwErrors) {
     if (throwErrors === void 0) { throwErrors = false; }
-    debugger;
     var stack = [];
     var p = startPosition;
     var char = code[p];

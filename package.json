@@ -1,6 +1,6 @@
 {
   "name": "find-matching-bracket",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Find matching bracket in Js/Ts/Cs code (including string Template literals interpolation)",
   "main": "index.js",
   "types": "index.d.ts",
