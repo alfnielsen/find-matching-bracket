@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/alfnielsen/find-matching-bracket/issues"
   },
-  "homepage": "https://github.com/alfnielsen/find-matching-bracket#readme"
+  "homepage": "https://github.com/alfnielsen/find-matching-bracket#readme",
+  "devDependencies": {
+    "mocha": "^9.1.0"
+  }
 }

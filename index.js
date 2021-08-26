@@ -2,35 +2,44 @@
 exports.__esModule = true;
 // Meta rules for each bracket type (Map)
 var brackets = {
-    angle: { name: 'angle', start: '<', end: '>' },
-    peparentheses: { name: 'peparentheses', start: '(', end: ')' },
-    square: { name: 'square', start: '[', end: ']' },
-    curly: { name: 'curly', start: '{', end: '}' },
-    inTemaple: { name: 'inTemaple', notAfter: "\\", start: '${', end: '}' },
-    inCTemaple: { name: 'inCTemaple', notAfter: "{", start: '{', end: '}' },
-    double: { name: 'double', start: '"', end: '"', isString: true },
-    single: { name: 'single', start: "'", end: "'", isString: true },
-    template: { name: 'template', start: "`", end: "`", isString: true, isTemplate: true },
-    cTemplate: { name: 'cTemplate', start: '$"', end: '"' }
+    lineComment: { name: "lineComment", start: "//", end: "\n" },
+    multilineComment: { name: "multilineComment", start: "/*", end: "*/" },
+    angle: { name: "angle", start: "<", end: ">" },
+    peparentheses: { name: "peparentheses", start: "(", end: ")" },
+    square: { name: "square", start: "[", end: "]" },
+    curly: { name: "curly", start: "{", end: "}" },
+    escapeJsTemaple: { name: "escapeJsTemaple", notAfter: "\\", start: "${", end: "}" },
+    escapeCSharpTemaple: { name: "escapeCSharpTemaple", notAfter: "{", start: "{", end: "}" },
+    double: { name: "double", start: '"', end: '"', notEndAfter: "\\", isString: true },
+    single: { name: "single", start: "'", end: "'", notEndAfter: "\\", isString: true },
+    jsTemplate: { name: "jsTemplate", start: "`", end: "`", notEndAfter: "\\", isString: true, isTemplate: true },
+    cSharpTemplate: { name: "cSharpTemplate", start: '$"', end: '"' }
 };
-brackets.inTemaple.startParent = brackets.template;
-brackets.inCTemaple.startParent = brackets.cTemplate;
-brackets.angle.notInParents = [brackets.double, brackets.single, brackets.template, brackets.cTemplate];
-brackets.peparentheses.notInParents = [brackets.double, brackets.single, brackets.template, brackets.cTemplate];
-brackets.square.notInParents = [brackets.double, brackets.single, brackets.template, brackets.cTemplate];
-brackets.curly.notInParents = [brackets.double, brackets.single, brackets.template, brackets.cTemplate];
-brackets.inTemaple.notInParents = [brackets.double, brackets.single, brackets.cTemplate];
-brackets.inCTemaple.notInParents = [brackets.double, brackets.single, brackets.template];
-brackets.double.notInParents = [brackets.single, brackets.template, brackets.cTemplate];
-brackets.single.notInParents = [brackets.double, brackets.template, brackets.cTemplate];
-brackets.template.notInParents = [brackets.double, brackets.single, brackets.cTemplate];
-brackets.cTemplate.notInParents = [brackets.double, brackets.single, brackets.template];
+// only start in parent
+brackets.escapeJsTemaple.startParent = brackets.jsTemplate;
+brackets.escapeCSharpTemaple.startParent = brackets.cSharpTemplate;
+// not in parent setting
+brackets.lineComment.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.multilineComment.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.angle.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.peparentheses.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.square.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.curly.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.escapeJsTemaple.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.cSharpTemplate];
+brackets.escapeCSharpTemaple.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate];
+brackets.double.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.single.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.jsTemplate.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.cSharpTemplate];
+brackets.cSharpTemplate.notInParents = [brackets.lineComment, brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate];
+// not end in parent (use notInParents is not set)
+brackets.lineComment.notEndInParents = [brackets.multilineComment, brackets.double, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
+brackets.multilineComment.notEndInParents = [brackets.lineComment, brackets.double, brackets.single, brackets.jsTemplate, brackets.cSharpTemplate];
 // Map to list (For easy iteration)
 var brackitSets = Object.values(brackets);
 // test for matching start bracket (set)
 var isStart = function (code, p, parent) {
     var char = code[p];
-    var next = code.length > (p + 1) ? code[p + 1] : undefined;
+    var next = code.length > p + 1 ? code[p + 1] : undefined;
     var last = code.length > 1 ? code[p - 1] : undefined;
     return brackitSets.find(function (bracketSet) {
         if (bracketSet.start.length === 2 && (bracketSet.start[0] !== char || bracketSet.start[1] !== next))
@@ -51,12 +60,23 @@ var isStart = function (code, p, parent) {
 // test for matching end bracket (set)
 var isEnd = function (code, p, parent) {
     var char = code[p];
-    return brackitSets.find(function (bSet) {
-        if (bSet.end !== char)
+    var next = code.length > p + 1 ? code[p + 1] : undefined;
+    var last = code.length > 1 ? code[p - 1] : undefined;
+    return brackitSets.find(function (bracketSet) {
+        if (bracketSet.end.length === 2 && (bracketSet.end[0] !== char || bracketSet.end[1] !== next))
             return false;
-        if (bSet !== parent)
+        else if (bracketSet.end.length === 1 && bracketSet.end !== char)
             return false;
-        if (bSet.notInParents.includes(parent))
+        if (bracketSet !== parent)
+            return false;
+        if (bracketSet.notEndInParents) {
+            // command cannot start in commment but end in them
+            if (bracketSet.notEndInParents.includes(parent))
+                return false;
+        }
+        else if (bracketSet.notInParents.includes(parent))
+            return false;
+        if (bracketSet.notEndAfter && bracketSet.notEndAfter === last)
             return false;
         return true;
     });
